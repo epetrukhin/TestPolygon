@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -101,30 +100,30 @@ namespace Functional
 
             return SequenceInsertCore();
 
-	        IEnumerable<TSource> SequenceInsertCore()
-	        {
-		        var counter = 0;
-		        var inserted = false;
-		        foreach (var t in sequence)
-		        {
-			        if (!inserted)
-			        {
-				        if (counter == index)
-				        {
-					        inserted = true;
-					        yield return item;
-				        }
-				        else
-				        {
-					        counter++;
-				        }
-			        }
-			        yield return t;
-		        }
-		        if (!inserted)
-			        yield return item;
-	        }
-		}
+            IEnumerable<TSource> SequenceInsertCore()
+            {
+                var counter = 0;
+                var inserted = false;
+                foreach (var t in sequence)
+                {
+                    if (!inserted)
+                    {
+                        if (counter == index)
+                        {
+                            inserted = true;
+                            yield return item;
+                        }
+                        else
+                        {
+                            counter++;
+                        }
+                    }
+                    yield return t;
+                }
+                if (!inserted)
+                    yield return item;
+            }
+        }
 
         /// <summary>
         /// Преобразует элемент <paramref name="item"/> в последовательность, состоящую из одного элемента.
@@ -195,7 +194,7 @@ namespace Functional
         /// </exception>
         [Pure]
         public static bool AtLeast<TSource>([NotNull, InstantHandle] this IEnumerable<TSource> sequence, int count,
-                                            [NotNull, InstantHandle] Func<TSource, bool> predicate)
+            [NotNull, InstantHandle] Func<TSource, bool> predicate)
         {
             if (sequence == null)
                 throw new ArgumentNullException(nameof(sequence));
@@ -267,7 +266,7 @@ namespace Functional
         /// </exception>
         [Pure]
         public static bool AtMost<TSource>([NotNull, InstantHandle] this IEnumerable<TSource> sequence, int count,
-                                           [NotNull, InstantHandle] Func<TSource, bool> predicate)
+            [NotNull, InstantHandle] Func<TSource, bool> predicate)
         {
             if (sequence == null)
                 throw new ArgumentNullException(nameof(sequence));
@@ -482,10 +481,13 @@ namespace Functional
             #region Fields
             [NotNull]
             private readonly IEnumerable<TItem> source;
+
             [NotNull]
             private readonly Func<TItem, TKey> keySelector;
+
             [NotNull]
             private readonly IComparer<TKey> comparer;
+
             private readonly bool descending;
             private readonly int count;
             #endregion
@@ -606,45 +608,45 @@ namespace Functional
 
             return FullOuterJoinCore();
 
-	        IEnumerable<(Maybe<TOuter>, Maybe<TInner>)> FullOuterJoinCore()
-	        {
-		        var groupedInner = inner.ToLookup(innerKeySelector);
+            IEnumerable<(Maybe<TOuter>, Maybe<TInner>)> FullOuterJoinCore()
+            {
+                var groupedInner = inner.ToLookup(innerKeySelector);
 
-		        var joinedKeys = new HashSet<TKey>();
+                var joinedKeys = new HashSet<TKey>();
 
-		        foreach (var outerItem in outer)
-		        {
-			        var outerKey = outerKeySelector(outerItem);
+                foreach (var outerItem in outer)
+                {
+                    var outerKey = outerKeySelector(outerItem);
 
-			        if (groupedInner.Contains(outerKey))
-			        {
-				        joinedKeys.Add(outerKey);
+                    if (groupedInner.Contains(outerKey))
+                    {
+                        joinedKeys.Add(outerKey);
 
-				        foreach (var innerItem in groupedInner[outerKey])
-				        {
-					        yield return (outerItem, innerItem);
-				        }
-			        }
-			        else
-			        {
-				        yield return (outerItem, Maybe<TInner>.Empty);
-			        }
-		        }
+                        foreach (var innerItem in groupedInner[outerKey])
+                        {
+                            yield return (outerItem, innerItem);
+                        }
+                    }
+                    else
+                    {
+                        yield return (outerItem, Maybe<TInner>.Empty);
+                    }
+                }
 
-		        foreach (var group in groupedInner)
-		        {
-			        if (joinedKeys.Contains(group.Key))
-				        continue;
+                foreach (var group in groupedInner)
+                {
+                    if (joinedKeys.Contains(group.Key))
+                        continue;
 
-			        foreach (var innerItem in group)
-			        {
-				        yield return (Maybe<TOuter>.Empty, innerItem);
-			        }
-		        }
-	        }
-		}
+                    foreach (var innerItem in group)
+                    {
+                        yield return (Maybe<TOuter>.Empty, innerItem);
+                    }
+                }
+            }
+        }
 
-	    public static IEnumerable<(TOuter Outer, Maybe<TInner> Inner)> LeftOuterJoin<TOuter, TInner, TKey>(
+        public static IEnumerable<(TOuter Outer, Maybe<TInner> Inner)> LeftOuterJoin<TOuter, TInner, TKey>(
             [NotNull] this IEnumerable<TOuter> outer,
             [NotNull] IEnumerable<TInner> inner,
             [NotNull] Func<TOuter, TKey> outerKeySelector,
@@ -661,30 +663,30 @@ namespace Functional
 
             return LeftOuterJoinCore();
 
-	        IEnumerable<(TOuter, Maybe<TInner>)> LeftOuterJoinCore()
-	        {
-		        var groupedInner = inner.ToLookup(innerKeySelector);
+            IEnumerable<(TOuter, Maybe<TInner>)> LeftOuterJoinCore()
+            {
+                var groupedInner = inner.ToLookup(innerKeySelector);
 
-		        foreach (var outerItem in outer)
-		        {
-			        var outerKey = outerKeySelector(outerItem);
+                foreach (var outerItem in outer)
+                {
+                    var outerKey = outerKeySelector(outerItem);
 
-			        if (groupedInner.Contains(outerKey))
-			        {
-				        foreach (var innerItem in groupedInner[outerKey])
-				        {
-					        yield return (outerItem, innerItem);
-				        }
-			        }
-			        else
-			        {
-				        yield return (outerItem, Maybe<TInner>.Empty);
-			        }
-		        }
-	        }
-		}
+                    if (groupedInner.Contains(outerKey))
+                    {
+                        foreach (var innerItem in groupedInner[outerKey])
+                        {
+                            yield return (outerItem, innerItem);
+                        }
+                    }
+                    else
+                    {
+                        yield return (outerItem, Maybe<TInner>.Empty);
+                    }
+                }
+            }
+        }
 
-	    public static IEnumerable<(Maybe<TOuter> Outer, TInner Inner)> RightOuterJoin<TOuter, TInner, TKey>(
+        public static IEnumerable<(Maybe<TOuter> Outer, TInner Inner)> RightOuterJoin<TOuter, TInner, TKey>(
             [NotNull] this IEnumerable<TOuter> outer,
             [NotNull] IEnumerable<TInner> inner,
             [NotNull] Func<TOuter, TKey> outerKeySelector,
@@ -701,41 +703,41 @@ namespace Functional
 
             return RightOuterJoinCore();
 
-	        IEnumerable<(Maybe<TOuter>, TInner)> RightOuterJoinCore()
-	        {
-		        var groupedInner = inner.ToLookup(innerKeySelector);
+            IEnumerable<(Maybe<TOuter>, TInner)> RightOuterJoinCore()
+            {
+                var groupedInner = inner.ToLookup(innerKeySelector);
 
-		        var joinedKeys = new HashSet<TKey>();
+                var joinedKeys = new HashSet<TKey>();
 
-		        foreach (var outerItem in outer)
-		        {
-			        var outerKey = outerKeySelector(outerItem);
+                foreach (var outerItem in outer)
+                {
+                    var outerKey = outerKeySelector(outerItem);
 
-			        if (groupedInner.Contains(outerKey))
-			        {
-				        joinedKeys.Add(outerKey);
+                    if (groupedInner.Contains(outerKey))
+                    {
+                        joinedKeys.Add(outerKey);
 
-				        foreach (var innerItem in groupedInner[outerKey])
-				        {
-					        yield return (outerItem, innerItem);
-				        }
-			        }
-		        }
+                        foreach (var innerItem in groupedInner[outerKey])
+                        {
+                            yield return (outerItem, innerItem);
+                        }
+                    }
+                }
 
-		        foreach (var group in groupedInner)
-		        {
-			        if (joinedKeys.Contains(group.Key))
-				        continue;
+                foreach (var group in groupedInner)
+                {
+                    if (joinedKeys.Contains(group.Key))
+                        continue;
 
-			        foreach (var innerItem in group)
-			        {
-				        yield return (Maybe<TOuter>.Empty, innerItem);
-			        }
-		        }
-	        }
-		}
+                    foreach (var innerItem in group)
+                    {
+                        yield return (Maybe<TOuter>.Empty, innerItem);
+                    }
+                }
+            }
+        }
 
-	    [NotNull]
+        [NotNull]
         public static IEnumerable<(TLeft Left, TRight Right)> Zip<TLeft, TRight>(
             [NotNull] this IEnumerable<TLeft> left,
             [NotNull] IEnumerable<TRight> right)

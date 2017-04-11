@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -46,7 +45,7 @@ namespace Functional
                 ofLeft(value);
             }
 
-	        // ReSharper disable once CompareNonConstrainedGenericWithNull
+            // ReSharper disable once CompareNonConstrainedGenericWithNull
             public override string ToString() => value == null ? "Left(null)" : $"Left({value})";
             #endregion
 
@@ -95,7 +94,7 @@ namespace Functional
                 ofRight(value);
             }
 
-	        // ReSharper disable once CompareNonConstrainedGenericWithNull
+            // ReSharper disable once CompareNonConstrainedGenericWithNull
             public override string ToString() => value == null ? "Right(null)" : $"Right({value})";
             #endregion
 
@@ -163,7 +162,6 @@ namespace Functional
 
         public static bool operator !=(Either<TLeft, TRight> left, Either<TLeft, TRight> right) => !Equals(left, right);
         #endregion
-
         #endregion
     }
 }

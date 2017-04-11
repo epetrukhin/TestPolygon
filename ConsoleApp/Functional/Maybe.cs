@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -109,7 +108,6 @@ namespace Functional
         public static bool operator ==(Maybe<T> left, Maybe<T> right) => left.Equals(right);
         public static bool operator !=(Maybe<T> left, Maybe<T> right) => !left.Equals(right);
         #endregion
-
         #endregion
     }
 
