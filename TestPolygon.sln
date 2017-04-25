@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{175BC8DB-02D2-42CF-9D31-0443335BAFA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{4EBB7349-6F67-467A-9061-B6BCD00D4789}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "WinForms\WinForms.csproj", "{58B727AD-8E14-44B0-BD05-AA9C6F528979}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{45996D45-3E1C-4992-824D-6DF5370D060B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,18 @@ Global
 		{58B727AD-8E14-44B0-BD05-AA9C6F528979}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{58B727AD-8E14-44B0-BD05-AA9C6F528979}.Release|Win32.ActiveCfg = Release|Any CPU
 		{58B727AD-8E14-44B0-BD05-AA9C6F528979}.Release|Win32.Build.0 = Release|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Debug|Win32.Build.0 = Debug|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Win32.ActiveCfg = Release|Any CPU
+		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

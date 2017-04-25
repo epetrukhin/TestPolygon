@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Running;
 using ConsoleApp.Helpers;
 using JetBrains.Annotations;
 
@@ -77,19 +74,5 @@ namespace ConsoleApp
 
         [PublicAPI, NotNull]
         public static IDisposable ForegroundColor(ConsoleColor color) => ConsoleHelpers.WithForegroundColor(color);
-
-        [PublicAPI]
-        private static void RunBenchmark() =>
-            BenchmarkRunner
-                .Run<Benchmark>(
-                    ManualConfig
-                        .Create(DefaultConfig.Instance)
-                        .With(
-                            Job.Default
-                                .WithLaunchCount(1)
-                                .WithWarmupCount(3)
-                                .WithTargetCount(5)))
-                .ToString()
-                .WriteLine();
     }
 }
