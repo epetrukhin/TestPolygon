@@ -6,7 +6,7 @@ namespace Benchmark
 {
     // ReSharper disable once ClassCanBeSealed.Global
     [Config(typeof(Config))]
-    public partial class Benchmark
+    public class Benchmark
     {
         // ReSharper disable once EmptyConstructor
         public Benchmark()
