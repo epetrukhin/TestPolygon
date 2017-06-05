@@ -17,11 +17,11 @@ namespace Functional
         private sealed class Left : Either<TLeft, TRight>
         {
             #region Fields
-            private readonly TLeft value;
+            private readonly TLeft _value;
             #endregion
 
             #region Ctor
-            public Left(TLeft value) => this.value = value;
+            public Left(TLeft value) => this._value = value;
             #endregion
 
             #region Methods
@@ -32,7 +32,7 @@ namespace Functional
                 if (ofRight == null)
                     throw new ArgumentNullException(nameof(ofRight));
 
-                return ofLeft(value);
+                return ofLeft(_value);
             }
 
             public override void Case(Action<TLeft> ofLeft, Action<TRight> ofRight)
@@ -42,11 +42,11 @@ namespace Functional
                 if (ofRight == null)
                     throw new ArgumentNullException(nameof(ofRight));
 
-                ofLeft(value);
+                ofLeft(_value);
             }
 
             // ReSharper disable once CompareNonConstrainedGenericWithNull
-            public override string ToString() => value == null ? "Left(null)" : $"Left({value})";
+            public override string ToString() => _value == null ? "Left(null)" : $"Left({_value})";
             #endregion
 
             #region Equality
@@ -56,21 +56,21 @@ namespace Functional
 
                 return
                     left != null &&
-                    EqualityComparer<TLeft>.Default.Equals(value, left.value);
+                    EqualityComparer<TLeft>.Default.Equals(_value, left._value);
             }
 
-            public override int GetHashCode() => EqualityComparer<TLeft>.Default.GetHashCode(value);
+            public override int GetHashCode() => EqualityComparer<TLeft>.Default.GetHashCode(_value);
             #endregion
         }
 
         private sealed class Right : Either<TLeft, TRight>
         {
             #region Fields
-            private readonly TRight value;
+            private readonly TRight _value;
             #endregion
 
             #region Ctor
-            public Right(TRight value) => this.value = value;
+            public Right(TRight value) => this._value = value;
             #endregion
 
             #region Methods
@@ -81,7 +81,7 @@ namespace Functional
                 if (ofRight == null)
                     throw new ArgumentNullException(nameof(ofRight));
 
-                return ofRight(value);
+                return ofRight(_value);
             }
 
             public override void Case(Action<TLeft> ofLeft, Action<TRight> ofRight)
@@ -91,11 +91,11 @@ namespace Functional
                 if (ofRight == null)
                     throw new ArgumentNullException(nameof(ofRight));
 
-                ofRight(value);
+                ofRight(_value);
             }
 
             // ReSharper disable once CompareNonConstrainedGenericWithNull
-            public override string ToString() => value == null ? "Right(null)" : $"Right({value})";
+            public override string ToString() => _value == null ? "Right(null)" : $"Right({_value})";
             #endregion
 
             #region Equality
@@ -105,10 +105,10 @@ namespace Functional
 
                 return
                     right != null &&
-                    EqualityComparer<TRight>.Default.Equals(value, right.value);
+                    EqualityComparer<TRight>.Default.Equals(_value, right._value);
             }
 
-            public override int GetHashCode() => EqualityComparer<TRight>.Default.GetHashCode(value);
+            public override int GetHashCode() => EqualityComparer<TRight>.Default.GetHashCode(_value);
             #endregion
         }
         #endregion

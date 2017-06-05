@@ -387,6 +387,7 @@ namespace ConsoleApp.Helpers
             catch (TargetInvocationException e)
             {
                 ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                // ReSharper disable once HeuristicUnreachableCode
                 throw;
             }
         }

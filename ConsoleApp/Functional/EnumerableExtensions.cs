@@ -480,16 +480,16 @@ namespace Functional
         {
             #region Fields
             [NotNull]
-            private readonly IEnumerable<TItem> source;
+            private readonly IEnumerable<TItem> _source;
 
             [NotNull]
-            private readonly Func<TItem, TKey> keySelector;
+            private readonly Func<TItem, TKey> _keySelector;
 
             [NotNull]
-            private readonly IComparer<TKey> comparer;
+            private readonly IComparer<TKey> _comparer;
 
-            private readonly bool descending;
-            private readonly int count;
+            private readonly bool _descending;
+            private readonly int _count;
             #endregion
 
             #region Ctor
@@ -502,11 +502,11 @@ namespace Functional
                 Debug.Assert(source != null);
                 Debug.Assert(keySelector != null);
 
-                this.source = source;
-                this.keySelector = keySelector;
-                this.comparer = comparer ?? Comparer<TKey>.Default;
-                this.descending = descending;
-                this.count = count;
+                this._source = source;
+                this._keySelector = keySelector;
+                this._comparer = comparer ?? Comparer<TKey>.Default;
+                this._descending = descending;
+                this._count = count;
             }
             #endregion
 
@@ -515,12 +515,12 @@ namespace Functional
 
             public IEnumerator<TItem> GetEnumerator()
             {
-                if (count <= 0)
+                if (_count <= 0)
                     yield break;
 
                 (TKey Key, TItem Item)[] keysWithItems;
 
-                var collection = source as ICollection<TItem>;
+                var collection = _source as ICollection<TItem>;
                 if (collection != null)
                 {
                     keysWithItems = new (TKey, TItem)[collection.Count];
@@ -528,28 +528,28 @@ namespace Functional
                     var index = 0;
                     foreach (var item in collection)
                     {
-                        keysWithItems[index] = (keySelector(item), item);
+                        keysWithItems[index] = (_keySelector(item), item);
                         index++;
                     }
                 }
                 else
                 {
-                    keysWithItems = source.Select(item => (keySelector(item), item)).ToArray();
+                    keysWithItems = _source.Select(item => (_keySelector(item), item)).ToArray();
                 }
 
                 if (keysWithItems.Length == 0)
                     yield break;
 
-                PartialSort(keysWithItems, 0, keysWithItems.Length - 1, count);
+                PartialSort(keysWithItems, 0, keysWithItems.Length - 1, _count);
 
-                var upper = Math.Min(count, keysWithItems.Length);
+                var upper = Math.Min(_count, keysWithItems.Length);
                 for (var i = 0; i < upper; i++)
                     yield return keysWithItems[i].Item;
             }
 
-            private int CompareKeys(TKey left, TKey right) => descending
-                ? comparer.Compare(right, left)
-                : comparer.Compare(left, right);
+            private int CompareKeys(TKey left, TKey right) => _descending
+                ? _comparer.Compare(right, left)
+                : _comparer.Compare(left, right);
 
             private void PartialSort((TKey Key, TItem Item)[] keysWithItems, int left, int right, int itemsToSort)
             {
