@@ -8,6 +8,7 @@ namespace ConsoleApp
 {
     internal static partial class Program
     {
+        [STAThread]
         private static void Main()
         {
             Console.OutputEncoding = Encoding.UTF8;
