@@ -146,4 +146,54 @@ namespace Functional
                     : Maybe<TOut>.Empty;
         }
     }
+
+    public static class MaybeExtensions
+    {
+        public static Maybe<U> Select<T, U>(this Maybe<T> source, [NotNull] Func<T, U> selector)
+        {
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Map(selector);
+        }
+
+        public static Maybe<U> SelectMany<T, U>(this Maybe<T> source, [NotNull] Func<T, Maybe<U>> selector)
+        {
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.HasValue ? selector(source.Value) : Maybe<U>.Empty;
+        }
+
+        public static Maybe<V> SelectMany<T, U, V>(this Maybe<T> source, [NotNull] Func<T, Maybe<U>> selector, [NotNull] Func<T, U, V> projector)
+        {
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+            if (projector == null)
+                throw new ArgumentNullException(nameof(projector));
+
+            if (source.IsEmpty)
+                return Maybe<V>.Empty;
+
+            var selected = selector(source.Value);
+            if (selected.IsEmpty)
+                return Maybe<V>.Empty;
+
+            return projector(source.Value, selected.Value);
+        }
+
+        public static Maybe<T> Where<T>(this Maybe<T> source, [NotNull] Func<T, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            if (source.IsEmpty)
+                return source;
+
+            if (!predicate(source.Value))
+                return Maybe<T>.Empty;
+
+            return source;
+        }
+    }
 }
