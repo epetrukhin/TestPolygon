@@ -29,12 +29,7 @@ namespace ConsoleApp
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomainOnUnhandledException;
             }
 
-            using (ForegroundColor(ConsoleColor.Yellow))
-            {
-                Console.Write("Press any key to close...");
-            }
-
-            WaitKey();
+            WaitKey("Press any key to close...");
         }
 
         private static void CurrentDomainOnUnhandledException(object _, [NotNull] UnhandledExceptionEventArgs args) =>
@@ -44,7 +39,7 @@ namespace ConsoleApp
         private static void DumpException(Exception ex)
         {
             Console.WriteLine();
-            using (ForegroundColor(ConsoleColor.Red))
+            using (ForegroundColor(ConsoleHelpers.ErrorColor))
             {
                 SeparatorLine();
                 ex.ToString().WriteLine();
@@ -63,7 +58,7 @@ namespace ConsoleApp
         private static void WaitKey(string prompt = null)
         {
             if (!string.IsNullOrWhiteSpace(prompt))
-                prompt.WriteLine();
+                prompt.WriteWarning();
 
             Console.ReadKey();
         }

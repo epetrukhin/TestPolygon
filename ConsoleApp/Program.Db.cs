@@ -43,10 +43,10 @@ namespace ConsoleApp
 
             var connectionString = new SqlConnectionStringBuilder
             {
-                DataSource = dataSource,
-                InitialCatalog = initialCatalog,
+                DataSource         = dataSource,
+                InitialCatalog     = initialCatalog,
                 IntegratedSecurity = true,
-                ApplicationName = $"Linq2DbTest_{Environment.MachineName}"
+                ApplicationName    = $"Linq2DbTest_{Environment.MachineName}"
             }.ToString();
 
             connectionString.Dump("Connection string");

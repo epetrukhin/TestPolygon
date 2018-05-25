@@ -7,9 +7,9 @@ namespace ConsoleApp.Helpers
     [PublicAPI]
     internal static class ConsoleHelpers
     {
-        public const ConsoleColor ErrorColor = ConsoleColor.Red;
+        public const ConsoleColor ErrorColor   = ConsoleColor.Red;
         public const ConsoleColor WarningColor = ConsoleColor.Yellow;
-        public const ConsoleColor InfoColor = ConsoleColor.DarkGreen;
+        public const ConsoleColor InfoColor    = ConsoleColor.DarkGreen;
 
         public static void WriteLine([CanBeNull] this string text) => Console.WriteLine(text ?? "<null>");
 
