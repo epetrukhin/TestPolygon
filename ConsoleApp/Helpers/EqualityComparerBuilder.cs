@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 
 namespace ConsoleApp.Helpers
 {
+    [PublicAPI]
     internal static class EqualityComparerBuilder
     {
         private sealed class Comparer<T> : IEqualityComparer<T>

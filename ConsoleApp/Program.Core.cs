@@ -11,6 +11,7 @@ namespace ConsoleApp
         [STAThread]
         private static void Main()
         {
+            Console.WindowWidth = Console.LargestWindowWidth - 5;
             Console.OutputEncoding = Encoding.UTF8;
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
@@ -46,7 +47,7 @@ namespace ConsoleApp
             using (ForegroundColor(ConsoleColor.Red))
             {
                 SeparatorLine();
-                Console.WriteLine(ex);
+                ex.ToString().WriteLine();
                 SeparatorLine();
             }
             Console.WriteLine();
@@ -62,7 +63,7 @@ namespace ConsoleApp
         private static void WaitKey(string prompt = null)
         {
             if (!string.IsNullOrWhiteSpace(prompt))
-                Console.WriteLine(prompt);
+                prompt.WriteLine();
 
             Console.ReadKey();
         }

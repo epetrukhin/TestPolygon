@@ -356,15 +356,6 @@ namespace Functional
             return NotFound;
         }
 
-        [NotNull]
-        public static HashSet<T> ToHashSet<T>([NotNull, InstantHandle] this IEnumerable<T> sequence)
-        {
-            if (sequence == null)
-                throw new ArgumentNullException(nameof(sequence));
-
-            return new HashSet<T>(sequence);
-        }
-
         [Pure]
         public static bool SetEqual<T>([NotNull, InstantHandle] this IEnumerable<T> first, [NotNull, InstantHandle] IEnumerable<T> second)
         {
@@ -748,6 +739,50 @@ namespace Functional
                 throw new ArgumentNullException(nameof(right));
 
             return left.Zip(right, (l, r) => (l, r));
+        }
+
+        [NotNull]
+        public static IEnumerable<(Maybe<TLeft> Left, Maybe<TRight> Right)> ZipAll<TLeft, TRight>(
+            [NotNull] this IEnumerable<TLeft> left,
+            [NotNull] IEnumerable<TRight> right)
+        {
+            if (left == null)
+                throw new ArgumentNullException(nameof(left));
+            if (right == null)
+                throw new ArgumentNullException(nameof(right));
+
+            using (var leftEnum = left.GetEnumerator())
+            using (var rightEnum = right.GetEnumerator())
+            {
+                while (true)
+                {
+                    var hasLeft = leftEnum.MoveNext();
+                    var hasRight = rightEnum.MoveNext();
+
+                    if (hasLeft && hasRight)
+                    {
+                        yield return (leftEnum.Current, rightEnum.Current);
+                    }
+                    else if (hasLeft)
+                    {
+                        yield return (leftEnum.Current, Maybe<TRight>.Empty);
+
+                        while (leftEnum.MoveNext())
+                            yield return (leftEnum.Current, Maybe<TRight>.Empty);
+                    }
+                    else if (hasRight)
+                    {
+                        yield return (Maybe<TLeft>.Empty, rightEnum.Current);
+
+                        while (leftEnum.MoveNext())
+                            yield return (Maybe<TLeft>.Empty, rightEnum.Current);
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
+            }
         }
     }
 }
