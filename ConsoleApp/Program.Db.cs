@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using ConsoleApp.Helpers;
 using LinqToDB.Data;
 using Maxima.Server.Database.Main;
@@ -21,7 +20,7 @@ namespace ConsoleApp
                     return;
             }
 
-            traceInfo.TraceInfoStep.ToString().WriteWarning();
+            $"{traceInfo.TraceInfoStep} ({traceInfo.TraceLevel})".WriteWarning();
             if (traceInfo.Exception != null)
                 DumpException(traceInfo.Exception);
 
@@ -38,8 +37,7 @@ namespace ConsoleApp
 
         private static void WorkWithDb(string dataSource, string initialCatalog)
         {
-            DataConnection.OnTrace = Trace;
-            DataConnection.TurnTraceSwitchOn(TraceLevel.Verbose);
+            DbMain.AddTraceListener(Trace);
 
             var connectionString = new SqlConnectionStringBuilder
             {
