@@ -40,11 +40,11 @@
     <Reference Include="Alba.CsConsoleFormat, Version=1.0.0.89, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Alba.CsConsoleFormat.1.0.0\lib\net40\Alba.CsConsoleFormat.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=2018.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2018.2.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="linq2db, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e41013125f9e410a, processorArchitecture=MSIL">
-      <HintPath>..\packages\linq2db.2.0.0\lib\net45\linq2db.dll</HintPath>
+    <Reference Include="linq2db, Version=2.2.0.0, Culture=neutral, PublicKeyToken=e41013125f9e410a, processorArchitecture=MSIL">
+      <HintPath>..\packages\linq2db.2.2.0\lib\net45\linq2db.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -57,9 +57,9 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Interactive, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Interactive.3.1.1\lib\net45\System.Interactive.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Interactive.3.2.0\lib\net45\System.Interactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
