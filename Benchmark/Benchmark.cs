@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 
 namespace Benchmark
@@ -10,29 +9,27 @@ namespace Benchmark
     {
         // ReSharper disable once EmptyConstructor
         public Benchmark()
+        {}
+
+        private readonly List<int> _list = new List<int>();
+        private readonly LinkedList<int> _linkedList = new LinkedList<int>();
+
+        [Benchmark(Baseline = true, OperationsPerInvoke = 1000)]
+        public void List()
         {
-            _data = new double[10_000];
-            var rnd = new Random();
-            for (var i = 0; i < _data.Length; i++)
+            for (int i = 0; i < 1000; i++)
             {
-                _data[i] = rnd.NextDouble();
+                _list.Insert(0, 42);
             }
         }
 
-        private readonly double[] _data;
-
-        [Benchmark(Baseline = true)]
-        public double LinqSum() => _data.Sum();
-
-        [Benchmark]
-        public double ForSum()
+        [Benchmark(OperationsPerInvoke = 1000)]
+        public void LinkedList()
         {
-            var result = 0d;
-            for (var i = 0; i < _data.Length; i++)
+            for (int i = 0; i < 1000; i++)
             {
-                result += _data[i];
+                _linkedList.AddFirst(42);
             }
-            return result;
         }
     }
 }

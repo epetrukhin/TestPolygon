@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using ConsoleApp.Helpers;
 using LinqToDB.Data;
+using Maxima.Server.Database;
 using Maxima.Server.Database.Main;
 
 namespace ConsoleApp
@@ -37,7 +38,7 @@ namespace ConsoleApp
 
         private static void WorkWithDb(string dataSource, string initialCatalog)
         {
-            DbMain.AddTraceListener(Trace);
+            MaximaDataConnection.AddTraceListener(Trace);
 
             var connectionString = new SqlConnectionStringBuilder
             {

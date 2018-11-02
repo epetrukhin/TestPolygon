@@ -20,11 +20,11 @@ namespace Benchmark
                 Job.LegacyJitX64
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)
-                    .WithTargetCount(3),
+                    .WithIterationCount(3),
                 Job.RyuJitX64
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)
-                    .WithTargetCount(3));
+                    .WithIterationCount(3));
         }
     }
 }

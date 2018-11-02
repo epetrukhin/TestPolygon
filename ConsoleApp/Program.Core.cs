@@ -52,6 +52,9 @@ namespace ConsoleApp
         private static void BlankLine() => Console.WriteLine();
 
         [PublicAPI]
+        public static void ClearConsole() => Console.Clear();
+
+        [PublicAPI]
         private static void SeparatorLine() => Console.Write(new string('=', Console.WindowWidth));
 
         [PublicAPI]

@@ -33,7 +33,7 @@ namespace ConsoleApp.Helpers
 
             Console.ForegroundColor = color;
 
-            return Disposable.Create(() => Console.ForegroundColor = currentColor);
+            return Disposable.Create(currentColor, cc => Console.ForegroundColor = cc);
         }
     }
 }
