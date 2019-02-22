@@ -94,8 +94,8 @@ namespace Functional
                 ? other.HasValue && EqualityComparer<T>.Default.Equals(_value, other._value)
                 : !other.HasValue;
 
-        public override bool Equals([CanBeNull] object obj) =>
-            obj is Maybe<T> && Equals((Maybe<T>)obj);
+        public override bool Equals(object obj) =>
+            obj is Maybe<T> maybe && Equals(maybe);
 
         public override int GetHashCode()
         {

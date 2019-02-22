@@ -36,9 +36,26 @@ namespace ConsoleApp
         private static void SetNoexecOn([JetBrains.Annotations.NotNull] this DataConnection db) => db.Execute("set noexec on");
         private static void SetNoexecOff([JetBrains.Annotations.NotNull] this DataConnection db) => db.Execute("set noexec off");
 
-        private static void WorkWithDb(string dataSource, string initialCatalog)
+        private enum TraceLevel
         {
-            MaximaDataConnection.AddTraceListener(Trace);
+            Verbose,
+            Normal,
+            Errors
+        }
+
+        private static void WorkWithDb(string dataSource, string initialCatalog, TraceLevel traceLevel = TraceLevel.Normal)
+        {
+            MaximaDataConnection.AddTraceListener(traceInfo =>
+            {
+                var step = traceInfo.TraceInfoStep;
+
+                if (traceLevel == TraceLevel.Errors && step != TraceInfoStep.Error)
+                    return;
+                if (traceLevel == TraceLevel.Normal && step != TraceInfoStep.Error && step != TraceInfoStep.Completed)
+                    return;
+
+                Trace(traceInfo);
+            });
 
             var connectionString = new SqlConnectionStringBuilder
             {

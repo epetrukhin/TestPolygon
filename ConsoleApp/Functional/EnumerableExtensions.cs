@@ -582,6 +582,21 @@ namespace Functional
             #endregion
         }
 
+        [NotNull]
+        public static IEnumerable<IEnumerable<T>> GetCartesianProduct<T>(
+            [NotNull] this IEnumerable<IEnumerable<T>> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Aggregate(
+                EnumerableEx.Return(Enumerable.Empty<T>()),
+                (accumulator, sequence) =>
+                    from acc in accumulator
+                    from item in sequence
+                    select acc.Concat(EnumerableEx.Return(item)));
+        }
+
         public static IEnumerable<(Maybe<TOuter> Outer, Maybe<TInner> Inner)> FullOuterJoin<TOuter, TInner, TKey>(
             [NotNull] this IEnumerable<TOuter> outer,
             [NotNull] IEnumerable<TInner> inner,
@@ -781,6 +796,36 @@ namespace Functional
                     {
                         yield break;
                     }
+                }
+            }
+        }
+
+        [NotNull, ItemNotNull]
+        public static IEnumerable<IEnumerable<T>> GetAllCombinations<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return GetAllCombinationsCore(source.ToList());
+
+            IEnumerable<IEnumerable<T>> GetAllCombinationsCore(IReadOnlyList<T> items)
+            {
+                if (items.Count == 0)
+                    yield break;
+
+                var head = items[0];
+                yield return new[] { head };
+
+                var tail = items.Skip(1).ToList();
+
+                foreach (var tailCombination in GetAllCombinationsCore(tail))
+                {
+                    yield return new[] { head }.Concat(tailCombination);
+                }
+
+                foreach (var tailCombination in GetAllCombinationsCore(tail))
+                {
+                    yield return tailCombination;
                 }
             }
         }

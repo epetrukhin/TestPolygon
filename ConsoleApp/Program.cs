@@ -8,7 +8,12 @@ namespace ConsoleApp
         [SuppressMessage("ReSharper", "ConvertMethodToExpressionBody")]
         private static void ProgramCode()
         {
-            WorkWithDb(dataSource: "10.10.15.12", initialCatalog: "Main");
+
+            return;
+
+//            WorkWithDb(dataSource: ".", initialCatalog: "Test");
+//            WorkWithDb(dataSource: "10.10.15.112" /* Эталон */, initialCatalog: "Main");
+            WorkWithDb(dataSource: "AppServer-QA2", initialCatalog: "Main", TraceLevel.Normal);
         }
 
         private static void WorkWithDb([JetBrains.Annotations.NotNull] DbMain db)

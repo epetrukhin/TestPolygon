@@ -50,7 +50,7 @@ namespace Functional
             #endregion
 
             #region Equality
-            public override bool Equals([CanBeNull] Either<TLeft, TRight> other)
+            public override bool Equals(Either<TLeft, TRight> other)
             {
                 var left = other as Left;
 
@@ -99,7 +99,7 @@ namespace Functional
             #endregion
 
             #region Equality
-            public override bool Equals([CanBeNull] Either<TLeft, TRight> other)
+            public override bool Equals(Either<TLeft, TRight> other)
             {
                 var right = other as Right;
 
@@ -142,7 +142,7 @@ namespace Functional
         public abstract void Case([NotNull] Action<TLeft> ofLeft, [NotNull] Action<TRight> ofRight);
 
         #region Equality
-        public sealed override bool Equals([CanBeNull] object obj)
+        public sealed override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
                 return false;
@@ -150,13 +150,13 @@ namespace Functional
                 return true;
 
             return
-                obj is Either<TLeft, TRight> &&
-                Equals((Either<TLeft, TRight>)obj);
+                obj is Either<TLeft, TRight> either &&
+                Equals(either);
         }
 
         public abstract override int GetHashCode();
 
-        public abstract bool Equals([CanBeNull] Either<TLeft, TRight> other);
+        public abstract bool Equals(Either<TLeft, TRight> other);
 
         public static bool operator ==(Either<TLeft, TRight> left, Either<TLeft, TRight> right) => Equals(left, right);
 

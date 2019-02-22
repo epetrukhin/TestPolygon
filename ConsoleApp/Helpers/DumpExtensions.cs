@@ -206,6 +206,12 @@ namespace ConsoleApp.Helpers
                 ("Item", typeof(IEnumerable<T>), items => items.ConvertToString()));
 
         [NotNull]
+        private static Document CreateDocument<T>([NotNull] IEnumerable<T[]> sequence) =>
+            CreateDocumentCore(
+                sequence,
+                ("Item", typeof(IEnumerable<T>), items => items.ConvertToString()));
+
+        [NotNull]
         private static Document CreateDocument<T>([NotNull] IEnumerable<T> sequence) =>
             CreateDocumentCore(
                 sequence,
