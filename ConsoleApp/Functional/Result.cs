@@ -84,14 +84,17 @@ namespace Functional
         }
 
         [NotNull, Pure]
-        public async Task<Result<TValueEx, TError>> MapValue<TValueEx>([NotNull] Func<TValue, Task<TValueEx>> mapper)
+        public Task<Result<TValueEx, TError>> MapValue<TValueEx>([NotNull] Func<TValue, Task<TValueEx>> mapper)
         {
             if (mapper == null)
                 throw new ArgumentNullException(nameof(mapper));
 
-            return _success
-                ? new Result<TValueEx, TError>(await mapper(_value))
-                : new Result<TValueEx, TError>(_error);
+            return MapValueCore(this, mapper);
+
+            async Task<Result<TValueEx, TError>> MapValueCore(Result<TValue, TError> source, Func<TValue, Task<TValueEx>> map) =>
+                source._success
+                    ? new Result<TValueEx, TError>(await map(source._value))
+                    : new Result<TValueEx, TError>(source._error);
         }
 
         [Pure]
@@ -256,7 +259,7 @@ namespace Functional
 
         #region Mapping for async result
         [NotNull, Pure]
-        public static async Task<Result<TValueEx, TError>> MapValue<TValue, TValueEx, TError>(
+        public static Task<Result<TValueEx, TError>> MapValue<TValue, TValueEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, TValueEx> mapper)
         {
@@ -265,11 +268,14 @@ namespace Functional
             if (mapper == null)
                 throw new ArgumentNullException(nameof(mapper));
 
-            return (await source).MapValue(mapper);
+            return MapValueCore(source, mapper);
+
+            async Task<Result<TValueEx, TError>> MapValueCore(Task<Result<TValue, TError>> src, Func<TValue, TValueEx> map) =>
+                (await src).MapValue(map);
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueEx, TError>> MapValue<TValue, TValueEx, TError>(
+        public static Task<Result<TValueEx, TError>> MapValue<TValue, TValueEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Task<TValueEx>> mapper)
         {
@@ -278,11 +284,14 @@ namespace Functional
             if (mapper == null)
                 throw new ArgumentNullException(nameof(mapper));
 
-            return await (await source).MapValue(mapper);
+            return MapValueCore(source, mapper);
+
+            async Task<Result<TValueEx, TError>> MapValueCore(Task<Result<TValue, TError>> src, Func<TValue, Task<TValueEx>> map) =>
+                await (await src).MapValue(map);
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValue, TErrorEx>> MapError<TValue, TError, TErrorEx>(
+        public static Task<Result<TValue, TErrorEx>> MapError<TValue, TError, TErrorEx>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TError, TErrorEx> mapper)
         {
@@ -291,7 +300,10 @@ namespace Functional
             if (mapper == null)
                 throw new ArgumentNullException(nameof(mapper));
 
-            return (await source).MapError(mapper);
+            return MapErrorCore(source, mapper);
+
+            async Task<Result<TValue, TErrorEx>> MapErrorCore(Task<Result<TValue, TError>> src, Func<TError, TErrorEx> map) =>
+                (await src).MapError(map);
         }
         #endregion
 
@@ -334,20 +346,23 @@ namespace Functional
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueEx, TError>> SelectMany<TValue, TValueEx, TError>(
+        public static Task<Result<TValueEx, TError>> SelectMany<TValue, TValueEx, TError>(
             this Result<TValue, TError> source,
             [NotNull] Func<TValue, Task<Result<TValueEx, TError>>> selector)
         {
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.IsSuccess
-                ? await selector(source.Value)
-                : new Result<TValueEx, TError>(source.Error);
+            return SelectManyCore(source, selector);
+
+            async Task<Result<TValueEx, TError>> SelectManyCore(Result<TValue, TError> src, Func<TValue, Task<Result<TValueEx, TError>>> select) =>
+                src.IsSuccess
+                    ? await select(src.Value)
+                    : new Result<TValueEx, TError>(src.Error);
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueEx, TError>> SelectMany<TValue, TValueEx, TError>(
+        public static Task<Result<TValueEx, TError>> SelectMany<TValue, TValueEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Result<TValueEx, TError>> selector)
         {
@@ -356,14 +371,21 @@ namespace Functional
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            var sourceResult = await source;
-            return sourceResult.IsSuccess
-                ? selector(sourceResult.Value)
-                : new Result<TValueEx, TError>(sourceResult.Error);
+            return SelectManyCore(source, selector);
+
+            async Task<Result<TValueEx, TError>> SelectManyCore(
+                Task<Result<TValue, TError>> src,
+                Func<TValue, Result<TValueEx, TError>> select)
+            {
+                var sourceResult = await src;
+                return sourceResult.IsSuccess
+                    ? select(sourceResult.Value)
+                    : new Result<TValueEx, TError>(sourceResult.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueEx, TError>> SelectMany<TValue, TValueEx, TError>(
+        public static Task<Result<TValueEx, TError>> SelectMany<TValue, TValueEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Task<Result<TValueEx, TError>>> selector)
         {
@@ -372,14 +394,21 @@ namespace Functional
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            var sourceResult = await source;
-            return sourceResult.IsSuccess
-                ? await selector(sourceResult.Value)
-                : new Result<TValueEx, TError>(sourceResult.Error);
+            return SelectManyCore(source, selector);
+
+            async Task<Result<TValueEx, TError>> SelectManyCore(
+                Task<Result<TValue, TError>> src,
+                Func<TValue, Task<Result<TValueEx, TError>>> select)
+            {
+                var sourceResult = await src;
+                return sourceResult.IsSuccess
+                    ? await select(sourceResult.Value)
+                    : new Result<TValueEx, TError>(sourceResult.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             this Result<TValue, TError> source,
             [NotNull] Func<TValue, Task<Result<TValueEx, TError>>> selector,
             [NotNull] Func<TValue, TValueEx, TValueExEx> projector)
@@ -389,17 +418,25 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            if (source.IsFail)
-                return new Result<TValueExEx, TError>(source.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = await selector(source.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(projector(source.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Result<TValue, TError> src,
+                Func<TValue, Task<Result<TValueEx, TError>>> select,
+                Func<TValue, TValueEx, TValueExEx> project)
+            {
+                if (src.IsFail)
+                    return new Result<TValueExEx, TError>(src.Error);
+
+                var selected = await select(src.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(project(src.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             this Result<TValue, TError> source,
             [NotNull] Func<TValue, Result<TValueEx, TError>> selector,
             [NotNull] Func<TValue, TValueEx, Task<TValueExEx>> projector)
@@ -409,17 +446,25 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            if (source.IsFail)
-                return new Result<TValueExEx, TError>(source.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = selector(source.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(await projector(source.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Result<TValue, TError> src,
+                Func<TValue, Result<TValueEx, TError>> select,
+                Func<TValue, TValueEx, Task<TValueExEx>> project)
+            {
+                if (src.IsFail)
+                    return new Result<TValueExEx, TError>(src.Error);
+
+                var selected = select(src.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(await project(src.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             this Result<TValue, TError> source,
             [NotNull] Func<TValue, Task<Result<TValueEx, TError>>> selector,
             [NotNull] Func<TValue, TValueEx, Task<TValueExEx>> projector)
@@ -429,17 +474,25 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            if (source.IsFail)
-                return new Result<TValueExEx, TError>(source.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = await selector(source.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(await projector(source.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Result<TValue, TError> src,
+                Func<TValue, Task<Result<TValueEx, TError>>> select,
+                Func<TValue, TValueEx, Task<TValueExEx>> project)
+            {
+                if (src.IsFail)
+                    return new Result<TValueExEx, TError>(src.Error);
+
+                var selected = await select(src.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(await project(src.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Result<TValueEx, TError>> selector,
             [NotNull] Func<TValue, TValueEx, TValueExEx> projector)
@@ -449,18 +502,26 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            var sourceResult = await source;
-            if (sourceResult.IsFail)
-                return new Result<TValueExEx, TError>(sourceResult.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = selector(sourceResult.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(projector(sourceResult.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Task<Result<TValue, TError>> src,
+                Func<TValue, Result<TValueEx, TError>> select,
+                Func<TValue, TValueEx, TValueExEx> project)
+            {
+                var sourceResult = await src;
+                if (sourceResult.IsFail)
+                    return new Result<TValueExEx, TError>(sourceResult.Error);
+
+                var selected = select(sourceResult.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(project(sourceResult.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Task<Result<TValueEx, TError>>> selector,
             [NotNull] Func<TValue, TValueEx, TValueExEx> projector)
@@ -470,18 +531,26 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            var sourceResult = await source;
-            if (sourceResult.IsFail)
-                return new Result<TValueExEx, TError>(sourceResult.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = await selector(sourceResult.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(projector(sourceResult.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Task<Result<TValue, TError>> src,
+                Func<TValue, Task<Result<TValueEx, TError>>> select,
+                Func<TValue, TValueEx, TValueExEx> project)
+            {
+                var sourceResult = await src;
+                if (sourceResult.IsFail)
+                    return new Result<TValueExEx, TError>(sourceResult.Error);
+
+                var selected = await select(sourceResult.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(project(sourceResult.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Result<TValueEx, TError>> selector,
             [NotNull] Func<TValue, TValueEx, Task<TValueExEx>> projector)
@@ -491,18 +560,26 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            var sourceResult = await source;
-            if (sourceResult.IsFail)
-                return new Result<TValueExEx, TError>(sourceResult.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = selector(sourceResult.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(await projector(sourceResult.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Task<Result<TValue, TError>> src,
+                Func<TValue, Result<TValueEx, TError>> select,
+                Func<TValue, TValueEx, Task<TValueExEx>> project)
+            {
+                var sourceResult = await src;
+                if (sourceResult.IsFail)
+                    return new Result<TValueExEx, TError>(sourceResult.Error);
+
+                var selected = select(sourceResult.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(await project(sourceResult.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
 
         [NotNull, Pure]
-        public static async Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
+        public static Task<Result<TValueExEx, TError>> SelectMany<TValue, TValueEx, TValueExEx, TError>(
             [NotNull] this Task<Result<TValue, TError>> source,
             [NotNull] Func<TValue, Task<Result<TValueEx, TError>>> selector,
             [NotNull] Func<TValue, TValueEx, Task<TValueExEx>> projector)
@@ -512,14 +589,22 @@ namespace Functional
             if (projector == null)
                 throw new ArgumentNullException(nameof(projector));
 
-            var sourceResult = await source;
-            if (sourceResult.IsFail)
-                return new Result<TValueExEx, TError>(sourceResult.Error);
+            return SelectManyCore(source, selector, projector);
 
-            var selected = await selector(sourceResult.Value);
-            return selected.IsSuccess
-                ? new Result<TValueExEx, TError>(await projector(sourceResult.Value, selected.Value))
-                : new Result<TValueExEx, TError>(selected.Error);
+            async Task<Result<TValueExEx, TError>> SelectManyCore(
+                Task<Result<TValue, TError>> src,
+                Func<TValue, Task<Result<TValueEx, TError>>> select,
+                Func<TValue, TValueEx, Task<TValueExEx>> project)
+            {
+                var sourceResult = await src;
+                if (sourceResult.IsFail)
+                    return new Result<TValueExEx, TError>(sourceResult.Error);
+
+                var selected = await select(sourceResult.Value);
+                return selected.IsSuccess
+                    ? new Result<TValueExEx, TError>(await project(sourceResult.Value, selected.Value))
+                    : new Result<TValueExEx, TError>(selected.Error);
+            }
         }
         #endregion
     }
