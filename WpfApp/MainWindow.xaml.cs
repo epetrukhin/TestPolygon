@@ -16,28 +16,28 @@ namespace WpfApp
         }
     }
 
-	public sealed class FooConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			var model = (Model)value;
-			return model.Flag;
-		}
+    public sealed class FooConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var model = (Model)value;
+            return model.Flag;
+        }
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotSupportedException();
-		}
-	}
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 
     internal sealed class Model : ModelBase
-	{
-		private bool flag;
+    {
+        private bool flag;
 
-		public bool Flag
-		{
-			get { return flag; }
-			set { SetProperty(ref flag, value); }
-		}
-	}
+        public bool Flag
+        {
+            get { return flag; }
+            set { SetProperty(ref flag, value); }
+        }
+    }
 }
