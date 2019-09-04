@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "WinForms\WinFor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{45996D45-3E1C-4992-824D-6DF5370D060B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkCore", "BenchmarkCore\BenchmarkCore.csproj", "{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Win32.ActiveCfg = Release|Any CPU
 		{45996D45-3E1C-4992-824D-6DF5370D060B}.Release|Win32.Build.0 = Release|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Debug|Win32.Build.0 = Debug|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Release|Win32.ActiveCfg = Release|Any CPU
+		{44C52562-2DC1-41DC-A3FE-56C7B8A4E410}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

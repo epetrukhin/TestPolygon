@@ -3,7 +3,7 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Jobs;
 
-namespace Benchmark
+namespace BenchmarkCore
 {
     public sealed class Config : ManualConfig
     {
@@ -13,7 +13,7 @@ namespace Benchmark
             Add(StatisticColumn.P95);
 
             Add(
-                Job.LegacyJitX64
+                Job.Core
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)
                     .WithIterationCount(3),

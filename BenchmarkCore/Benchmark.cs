@@ -6,7 +6,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using JetBrains.Annotations;
 
-namespace Benchmark
+namespace BenchmarkCore
 {
     // ReSharper disable once ClassCanBeSealed.Global
     [Config(typeof(Config))]
@@ -54,7 +54,6 @@ namespace Benchmark
 
         private const int Size = 100_000;
 
-        [NotNull]
         private static string ScoreToString(int team1, int team2) =>
             team1.ToString(CultureInfo.InvariantCulture) +
             ":" +
