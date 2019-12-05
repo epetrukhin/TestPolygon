@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Columns;
-using JetBrains.Annotations;
 
 namespace Benchmark
 {
@@ -12,82 +8,29 @@ namespace Benchmark
     [Config(typeof(Config))]
     public class Benchmark
     {
-        // ReSharper disable once EmptyConstructor
-        public Benchmark()
+        private const int VALUE = 1;
+
+        private IEnumerable<int> _repeatSource;
+
+        [Params(1000, 10000, 100000, 1000000)]
+        public int N;
+
+        [GlobalSetup]
+        public void Setup()
         {
-            _team1 = new int[Size];
-            _team2 = new int[Size];
-            _results = new string[Size];
-
-            var rnd = new Random(42);
-
-            for (var i = 0; i < Size; i++)
-            {
-                _team1[i] = rnd.Next(0, 100);
-                _team2[i] = rnd.Next(0, 100);
-            }
-
-            var scoresToCache =
-                from team1 in Enumerable.Range(0, 100)
-                from team2 in Enumerable.Range(0, 100)
-                select (team1, team2);
-
-            _dictCache = scoresToCache.ToDictionary(score => score, score => ScoreToString(score.team1, score.team2));
-
-            _arrayCache = new string[100 * 100];
-            for (var i = 0; i < 100; i++)
-            {
-                for (var j = 0; j < 100; j++)
-                {
-                    _arrayCache[ScoreToIndex(i, j)] = ScoreToString(i, j);
-                }
-            }
+            _repeatSource = Enumerable.Repeat(0, N).Select(x => VALUE);
         }
 
-        private readonly int[] _team1;
-        private readonly int[] _team2;
-
-        private readonly Dictionary<(int, int), string> _dictCache;
-        private readonly string[] _arrayCache;
-
-        private readonly string[] _results;
-
-        private const int Size = 100_000;
-
-        [NotNull]
-        private static string ScoreToString(int team1, int team2) =>
-            team1.ToString(CultureInfo.InvariantCulture) +
-            ":" +
-            team2.ToString(CultureInfo.InvariantCulture);
-
-        private static int ScoreToIndex(int team1, int team2) =>
-            team1 * 100 + team2;
-
-        [Benchmark(Baseline = true, OperationsPerInvoke = Size)]
-        public void Calc()
+        [Benchmark]
+        public List<int> ToList()
         {
-            for (var i = 0; i < Size; i++)
-            {
-                _results[i] = ScoreToString(_team1[i], _team2[i]);
-            }
+            return _repeatSource.ToList();
         }
 
-        [Benchmark( OperationsPerInvoke = Size)]
-        public void DictCache()
+        [Benchmark]
+        public int[] ToArray()
         {
-            for (var i = 0; i < Size; i++)
-            {
-                _results[i] = _dictCache[(_team1[i], _team2[i])];
-            }
-        }
-
-        [Benchmark( OperationsPerInvoke = Size)]
-        public void ArrayCache()
-        {
-            for (var i = 0; i < Size; i++)
-            {
-                _results[i] = _arrayCache[ScoreToIndex(_team1[i], _team2[i])];
-            }
+            return _repeatSource.ToArray();
         }
     }
 }

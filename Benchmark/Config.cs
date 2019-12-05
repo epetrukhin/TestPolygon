@@ -13,10 +13,10 @@ namespace Benchmark
             Add(StatisticColumn.P95);
 
             Add(
-                Job.LegacyJitX64
+                /*Job.LegacyJitX64
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)
-                    .WithIterationCount(3),
+                    .WithIterationCount(3),*/
                 Job.RyuJitX64
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)

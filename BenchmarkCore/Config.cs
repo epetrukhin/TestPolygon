@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
 
 namespace BenchmarkCore
@@ -13,11 +14,11 @@ namespace BenchmarkCore
             Add(StatisticColumn.P95);
 
             Add(
-                Job.Core
+                Job.Default.With(CoreRuntime.Core30)
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)
                     .WithIterationCount(3),
-                Job.RyuJitX64
+                Job.Default.With(ClrRuntime.Net48)
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)
                     .WithIterationCount(3));
