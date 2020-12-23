@@ -9,10 +9,10 @@ namespace Benchmark
     {
         public Config()
         {
-            Add(MemoryDiagnoser.Default);
-            Add(StatisticColumn.P95);
+            AddDiagnoser(MemoryDiagnoser.Default);
+            AddColumn(StatisticColumn.P95);
 
-            Add(
+            AddJob(
                 /*Job.LegacyJitX64
                     .WithLaunchCount(1)
                     .WithWarmupCount(1)

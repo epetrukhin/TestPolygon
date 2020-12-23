@@ -11,7 +11,7 @@ namespace ConsoleAppCore
         [STAThread]
         private static void Main()
         {
-            Console.WindowWidth = Console.LargestWindowWidth - 5;
+            Console.WindowWidth = Console.LargestWindowWidth - 20;
             Console.OutputEncoding = Encoding.UTF8;
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;

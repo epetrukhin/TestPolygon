@@ -10,18 +10,19 @@ namespace BenchmarkCore
     {
         public Config()
         {
-            Add(MemoryDiagnoser.Default);
-            Add(StatisticColumn.P95);
+            AddDiagnoser(MemoryDiagnoser.Default);
+            AddDiagnoser(new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig()));
+            AddColumn(StatisticColumn.P95);
 
-            Add(
-                Job.Default.With(CoreRuntime.Core30)
+            AddJob(
+                Job.Default.WithRuntime(CoreRuntime.Core31)
                     .WithLaunchCount(1)
-                    .WithWarmupCount(1)
-                    .WithIterationCount(3),
-                Job.Default.With(ClrRuntime.Net48)
+                    .WithWarmupCount(2)
+                    .WithIterationCount(5),
+                Job.Default.WithRuntime(CoreRuntime.Core50)
                     .WithLaunchCount(1)
-                    .WithWarmupCount(1)
-                    .WithIterationCount(3));
+                    .WithWarmupCount(2)
+                    .WithIterationCount(5));
         }
     }
 }
