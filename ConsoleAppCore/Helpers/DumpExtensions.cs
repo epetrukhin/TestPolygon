@@ -14,7 +14,7 @@ namespace ConsoleAppCore.Helpers
         private const int DefaultMaxItemsCount = 50;
 
         #region Type helpers
-        private static readonly HashSet<Type> ScalarTypes = new HashSet<Type>
+        private static readonly HashSet<Type> ScalarTypes = new()
         {
             typeof(object),
             typeof(string),
@@ -143,7 +143,7 @@ namespace ConsoleAppCore.Helpers
         #endregion
 
         #region As table
-        private static readonly HashSet<Type> RightAlignTypes = new HashSet<Type>
+        private static readonly HashSet<Type> RightAlignTypes = new()
         {
             typeof(int),
             typeof(uint),
@@ -159,7 +159,7 @@ namespace ConsoleAppCore.Helpers
         private static Align GetAligmentFor(Type type) =>
             RightAlignTypes.Contains(type) ? Align.Right : Align.Left;
 
-        private static readonly LineThickness HeaderThickness = new LineThickness(LineWidth.Single, LineWidth.Double);
+        private static readonly LineThickness HeaderThickness = new(LineWidth.Single, LineWidth.Double);
 
         [NotNull]
         private static Document CreateDocumentCore<T>(
