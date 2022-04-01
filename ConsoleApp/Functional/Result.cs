@@ -29,16 +29,16 @@ namespace Functional
         {}
 
         public static implicit operator Result<TValue, TError>(Result.SuccessResult<TValue> success) =>
-            new Result<TValue, TError>(success.Value);
+            new(success.Value);
 
         public static implicit operator Result<TValue, TError>(TValue value) =>
-            new Result<TValue, TError>(value);
+            new(value);
 
         public static implicit operator Result<TValue, TError>(Result.FailResult<TError> fail) =>
-            new Result<TValue, TError>(fail.Error);
+            new(fail.Error);
 
         public static implicit operator Result<TValue, TError>(TError error) =>
-            new Result<TValue, TError>(error);
+            new(error);
 
         public bool IsSuccess => _success;
 
@@ -156,7 +156,7 @@ namespace Functional
 
             [Pure]
             public Result<T, TError> WithErrorType<TError>() =>
-                new Result<T, TError>(Value);
+                new(Value);
 
             #region Equality
             public bool Equals(SuccessResult<T> other) => EqualityComparer<T>.Default.Equals(Value, other.Value);
@@ -185,7 +185,7 @@ namespace Functional
 
             [Pure]
             public Result<TValue, T> WithValueType<TValue>() =>
-                new Result<TValue, T>(Error);
+                new(Error);
 
             #region Equality
             public bool Equals(FailResult<T> other) => EqualityComparer<T>.Default.Equals(Error, other.Error);
@@ -206,10 +206,10 @@ namespace Functional
         }
 
         [Pure]
-        public static SuccessResult<T> Success<T>(T value) => new SuccessResult<T>(value);
+        public static SuccessResult<T> Success<T>(T value) => new(value);
 
         [Pure]
-        public static FailResult<T> Fail<T>(T error) => new FailResult<T>(error);
+        public static FailResult<T> Fail<T>(T error) => new(error);
 
         #region Select & SelectMany
         [Pure]

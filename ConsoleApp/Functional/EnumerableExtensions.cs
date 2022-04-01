@@ -511,8 +511,7 @@ namespace Functional
 
                 (TKey Key, TItem Item)[] keysWithItems;
 
-                var collection = _source as ICollection<TItem>;
-                if (collection != null)
+                if (_source is ICollection<TItem> collection)
                 {
                     keysWithItems = new (TKey, TItem)[collection.Count];
 

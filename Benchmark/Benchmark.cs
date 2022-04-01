@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Buffers.Text;
+using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using BenchmarkDotNet.Attributes;
 
 namespace Benchmark
@@ -8,29 +11,83 @@ namespace Benchmark
     [Config(typeof(Config))]
     public class Benchmark
     {
-        private const int VALUE = 1;
+        private const int Count = 100_000;
+        private static int[] values;
 
-        private IEnumerable<int> _repeatSource;
+        private static ReadOnlyMemory<byte>[] serializedValues;
 
-        [Params(1000, 10000, 100000, 1000000)]
-        public int N;
+        private static JsonWriterOptions options;
 
         [GlobalSetup]
         public void Setup()
         {
-            _repeatSource = Enumerable.Repeat(0, N).Select(x => VALUE);
+            options = new JsonWriterOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                Indented = false,
+                SkipValidation = true
+            };
+
+            var buffer = new byte[1024 * 1024 * 1024];
+            var currentDataIndex = 0;
+
+            serializedValues = new ReadOnlyMemory<byte>[Count + 1011];
+
+            values = new int[Count];
+            var value = 1010;
+            for (var i = 0; i < values.Length; i++)
+            {
+                values[i] = value;
+                Utf8Formatter.TryFormat(value / 1_000m, buffer.AsSpan(currentDataIndex), out var bytesWritten);
+
+                serializedValues[value] = new ReadOnlyMemory<byte>(buffer, currentDataIndex, bytesWritten);
+
+                value++;
+                currentDataIndex += bytesWritten;
+            }
         }
 
-        [Benchmark]
-        public List<int> ToList()
+        [Benchmark(Baseline = true, OperationsPerInvoke = Count)]
+        public void Divide()
         {
-            return _repeatSource.ToList();
+            using (var writer = new Utf8JsonWriter(Stream.Null, options))
+            {
+                writer.WriteStartArray();
+
+                foreach (var value in values)
+                    writer.WriteNumberValue(value / 1_000m);
+
+                writer.WriteEndArray();
+
+                writer.Flush();
+            }
         }
 
-        [Benchmark]
-        public int[] ToArray()
+        [Benchmark(OperationsPerInvoke = Count)]
+        public void Preserialized()
         {
-            return _repeatSource.ToArray();
+            var memories = serializedValues;
+
+            using (var writer = new Utf8JsonWriter(Stream.Null, options))
+            {
+                writer.WriteStartArray();
+
+                foreach (var value in values)
+                {
+                    if (value < memories.Length)
+                    {
+                        writer.WriteRawValue(memories[value].Span, true);
+                    }
+                    else
+                    {
+                        writer.WriteNumberValue(value / 1_000m);
+                    }
+                }
+
+                writer.WriteEndArray();
+
+                writer.Flush();
+            }
         }
     }
 }
