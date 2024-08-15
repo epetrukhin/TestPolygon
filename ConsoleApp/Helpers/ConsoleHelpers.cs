@@ -2,38 +2,37 @@
 using System.Reactive.Disposables;
 using JetBrains.Annotations;
 
-namespace ConsoleApp.Helpers
+namespace ConsoleApp.Helpers;
+
+[PublicAPI]
+internal static class ConsoleHelpers
 {
-    [PublicAPI]
-    internal static class ConsoleHelpers
+    public const ConsoleColor ErrorColor   = ConsoleColor.Red;
+    public const ConsoleColor WarningColor = ConsoleColor.Yellow;
+    public const ConsoleColor InfoColor    = ConsoleColor.DarkGreen;
+
+    public static void WriteLine([CanBeNull] this string text) => Console.WriteLine(text ?? "<null>");
+
+    public static void WriteError([CanBeNull] this string text)   => text.WriteWithColor(ErrorColor);
+    public static void WriteWarning([CanBeNull] this string text) => text.WriteWithColor(WarningColor);
+    public static void WriteInfo([CanBeNull] this string text)    => text.WriteWithColor(InfoColor);
+
+    public static void WriteWithColor([CanBeNull] this string text, ConsoleColor color)
     {
-        public const ConsoleColor ErrorColor   = ConsoleColor.Red;
-        public const ConsoleColor WarningColor = ConsoleColor.Yellow;
-        public const ConsoleColor InfoColor    = ConsoleColor.DarkGreen;
+        using (WithForegroundColor(color))
+            text.WriteLine();
+    }
 
-        public static void WriteLine([CanBeNull] this string text) => Console.WriteLine(text ?? "<null>");
+    [NotNull]
+    public static IDisposable WithForegroundColor(ConsoleColor color)
+    {
+        var currentColor = Console.ForegroundColor;
 
-        public static void WriteError([CanBeNull] this string text)   => text.WriteWithColor(ErrorColor);
-        public static void WriteWarning([CanBeNull] this string text) => text.WriteWithColor(WarningColor);
-        public static void WriteInfo([CanBeNull] this string text)    => text.WriteWithColor(InfoColor);
+        if (currentColor == color)
+            return Disposable.Empty;
 
-        public static void WriteWithColor([CanBeNull] this string text, ConsoleColor color)
-        {
-            using (WithForegroundColor(color))
-                text.WriteLine();
-        }
+        Console.ForegroundColor = color;
 
-        [NotNull]
-        public static IDisposable WithForegroundColor(ConsoleColor color)
-        {
-            var currentColor = Console.ForegroundColor;
-
-            if (currentColor == color)
-                return Disposable.Empty;
-
-            Console.ForegroundColor = color;
-
-            return Disposable.Create(currentColor, cc => Console.ForegroundColor = cc);
-        }
+        return Disposable.Create(currentColor, cc => Console.ForegroundColor = cc);
     }
 }

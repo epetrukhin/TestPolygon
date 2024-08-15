@@ -4,32 +4,20 @@ using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
 
-namespace Benchmark
+namespace Benchmark;
+
+public sealed class Config : ManualConfig
 {
-    public sealed class Config : ManualConfig
+    public Config()
     {
-        public Config()
-        {
-            AddDiagnoser(MemoryDiagnoser.Default);
-            AddColumn(StatisticColumn.P95);
-            AddColumn(StatisticColumn.OperationsPerSecond);
+        // AddHardwareCounters(HardwareCounter.CacheMisses, HardwareCounter.BranchInstructions, HardwareCounter.BranchMispredictions);
+        AddDiagnoser(MemoryDiagnoser.Default);
+        AddColumn(StatisticColumn.P95, StatisticColumn.OperationsPerSecond);
 
-            AddJob(
-                Job.Default.WithRuntime(CoreRuntime.Core60)
-                    .WithLaunchCount(1)
-                    .WithWarmupCount(3)
-                    .WithIterationCount(10));
-
-            // AddDiagnoser(MemoryDiagnoser.Default);
-            // AddDiagnoser(new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig()));
-            // AddColumn(StatisticColumn.P95);
-            // AddColumn(StatisticColumn.OperationsPerSecond);
-            //
-            // AddJob(
-            //     Job.Default.WithRuntime(CoreRuntime.Core50)
-            //         .WithLaunchCount(2)
-            //         .WithWarmupCount(3)
-            //         .WithIterationCount(10));
-        }
+        AddJob(
+            Job.Default.WithRuntime(CoreRuntime.Core80)
+                .WithLaunchCount(1)
+                .WithWarmupCount(3)
+                .WithIterationCount(10));
     }
 }

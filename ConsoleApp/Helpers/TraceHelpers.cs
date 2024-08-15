@@ -4,48 +4,45 @@ using System.Linq;
 using System.Reactive.Linq;
 using JetBrains.Annotations;
 
-namespace ConsoleApp.Helpers
+namespace ConsoleApp.Helpers;
+
+[PublicAPI]
+internal static class TraceHelpers
 {
-    [PublicAPI]
-    internal static class TraceHelpers
+    [NotNull]
+    public static IEnumerable<T> Trace<T>([NotNull] this IEnumerable<T> source, [CanBeNull] object name = null)
     {
-        [NotNull]
-        public static IEnumerable<T> Trace<T>([NotNull] this IEnumerable<T> source, [CanBeNull] object name = null)
+        ArgumentNullException.ThrowIfNull(source);
+
+        List<T> result;
+
+        try
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            List<T> result;
-
-            try
-            {
-                result = source.ToList();
-                result.Dump(name);
-            }
-            catch (Exception e)
-            {
-                e.Dump(name);
-                throw;
-            }
-
-            return result;
+            result = source.ToList();
+            result.Dump(name);
+        }
+        catch (Exception e)
+        {
+            e.Dump(name);
+            throw;
         }
 
-        [NotNull]
-        public static IObservable<T> Trace<T>([NotNull] this IObservable<T> source, [CanBeNull] object name = null)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+        return result;
+    }
 
-            var nameString = name?.ToString();
+    [NotNull]
+    public static IObservable<T> Trace<T>([NotNull] this IObservable<T> source, [CanBeNull] object name = null)
+    {
+        ArgumentNullException.ThrowIfNull(source);
 
-            void Action(string str) =>
-                (string.IsNullOrWhiteSpace(nameString) ? str : $"{nameString}: {str}").WriteLine();
+        var nameString = name?.ToString();
 
-            return source.Do(
-                item      => Action($"OnNext({item.ConvertToString()})"),
-                exception => Action($"OnError({exception.ConvertToString()})"),
-                ()        => Action("OnCompleted"));
-        }
+        void Action(string str) =>
+            (string.IsNullOrWhiteSpace(nameString) ? str : $"{nameString}: {str}").WriteLine();
+
+        return source.Do(
+            item      => Action($"OnNext({item.ConvertToString()})"),
+            exception => Action($"OnError({exception.ConvertToString()})"),
+            ()        => Action("OnCompleted"));
     }
 }

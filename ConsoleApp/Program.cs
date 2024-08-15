@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#nullable enable
 
-#nullable enable
+using System.Diagnostics.CodeAnalysis;
 
 namespace ConsoleApp;
 
